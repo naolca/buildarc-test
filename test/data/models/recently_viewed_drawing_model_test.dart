@@ -52,6 +52,7 @@ void main() {
       final json = model.toJson();
 
       // Assert
+
       expect(
           json,
           equals({
