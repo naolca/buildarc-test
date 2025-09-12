@@ -13,7 +13,6 @@ class DrawingCatalogService {
   Future<DrawingsCatalogData?> fetchDrawingCatalog(
       ProjectMetadata selectedProject) async {
     savedSelectedProject = selectedProject;
-    print("DEBUG: Fetching drawings for project: ${selectedProject.id}");
 
     Query<DrawingsCatalogData> drawingsCatalogQuery = FirebaseFirestore.instance
         .collection('drawings_catalog')
@@ -26,24 +25,16 @@ class DrawingCatalogService {
     try {
       QuerySnapshot<DrawingsCatalogData> querySnapshot =
           await drawingsCatalogQuery.get();
-      print(
-          "DEBUG: Found ${querySnapshot.docs.length} drawings catalog documents");
       QueryDocumentSnapshot<DrawingsCatalogData>? snapshot =
           querySnapshot.docs.firstOrNull;
       DrawingsCatalogData? drawingsCatalog = snapshot?.data();
       if (snapshot != null && drawingsCatalog != null) {
-        print("DEBUG: Found drawings catalog, fetching drawing items...");
         drawingsCatalog.drawingItems = await _fetchDrawingItems(snapshot.id);
-        print(
-            "DEBUG: Found ${drawingsCatalog.drawingItems.length} drawing items");
         return drawingsCatalog;
       } else {
-        print(
-            "DEBUG: No drawings catalog found for project ${selectedProject.id}");
         throw Exception("Project id doesn't exist");
       }
     } catch (e) {
-      print("DEBUG: Error fetching drawings catalog: $e");
       throw Exception(e.toString());
     }
   }

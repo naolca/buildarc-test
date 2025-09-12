@@ -31,9 +31,8 @@ class HomeScreenDataModel {
   ) {
     if (homeScreenData is HomeScreenDataModel) {
       return {
-        "drawings": homeScreenData.drawings
-            .map((drawing) => drawing.toJson())
-            .toList(),
+        "drawings":
+            homeScreenData.drawings.map((drawing) => drawing.toJson()).toList(),
       };
     } else {
       throw ArgumentError(

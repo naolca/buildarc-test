@@ -52,11 +52,13 @@ void main() {
       final json = model.toJson();
 
       // Assert
-      expect(json, equals({
-        'title': 'A103',
-        'subtitle': 'OFFICE FLOOR PLAN',
-        'drawingThumbnailUrl': 'drawing_images/test.jpg',
-      }));
+      expect(
+          json,
+          equals({
+            'title': 'A103',
+            'subtitle': 'OFFICE FLOOR PLAN',
+            'drawingThumbnailUrl': 'drawing_images/test.jpg',
+          }));
     });
 
     test('should create model from entity', () {

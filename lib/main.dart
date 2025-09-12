@@ -2,7 +2,6 @@ import 'package:ardennes/auth_screen.dart';
 import 'package:ardennes/features/drawing_detail/drawing_detail_bloc.dart';
 import 'package:ardennes/features/drawing_detail/drawing_detail_view.dart';
 import 'package:ardennes/features/drawings_catalog/drawings_catalog_bloc.dart';
-import 'package:ardennes/features/recently_viewed/bloc/recently_viewed_bloc.dart';
 import 'package:ardennes/features/drawings_catalog/drawings_catalog_event.dart'
     as dc_event;
 import 'package:ardennes/features/drawings_catalog/drawings_catalog_view.dart';
@@ -74,8 +73,6 @@ Future<void> _configureFirebaseFirestore() async {
   debugPrint('Using Firebase Firestore emulator on: $host:$port');
   // Leave as commented if loading from firebase emualator export
   // E.g. firebase emulators:start --import=.firebase/emulator/export
-  // Note: The firebase-export-1756987996351jWRkIb only contains Auth and Storage data,
-  // so we need to populate Firestore data separately
   // populateFirestore();
 }
 
@@ -85,7 +82,7 @@ void populateFirestore() {
   final drawings = populateDrawingsDetailNoorAcademy();
   populateDrawingsCatalogNoorAcademy(drawings);
   populateUsers();
-  // populateHomeScreens();
+  populateHomeScreens();
 }
 
 Future<void> _configureFirebaseStorage() async {
@@ -114,9 +111,7 @@ final _router = GoRouter(
           }),
           BlocProvider<AccountContextBloc>(
               create: (BuildContext context) =>
-                  getIt<AccountContextBloc>()..add(ac_event.InitEvent())),
-          BlocProvider<RecentlyViewedBloc>(
-              create: (BuildContext context) => getIt<RecentlyViewedBloc>())
+                  getIt<AccountContextBloc>()..add(ac_event.InitEvent()))
         ], child: MainScreen(navigationShell: navigationShell));
       },
       branches: [
@@ -158,9 +153,6 @@ final _router = GoRouter(
                                 create: (BuildContext context) =>
                                     getIt<AccountContextBloc>()
                                       ..add(ac_event.InitEvent())),
-                            BlocProvider<RecentlyViewedBloc>(
-                                create: (BuildContext context) =>
-                                    getIt<RecentlyViewedBloc>()),
                             BlocProvider<DrawingDetailBloc>(
                               create: (BuildContext context) =>
                                   getIt<DrawingDetailBloc>()

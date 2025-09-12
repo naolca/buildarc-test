@@ -1,10 +1,7 @@
 import 'package:ardennes/libraries/core_ui/canvas/sketch.dart';
 import 'package:ardennes/libraries/drawing/image_provider.dart';
 import 'package:ardennes/models/drawings/drawing_detail.dart';
-import 'package:ardennes/features/recently_viewed/bloc/recently_viewed_bloc.dart';
-import 'package:ardennes/features/recently_viewed/events/recently_viewed_event.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -14,13 +11,10 @@ import 'drawing_detail_state.dart';
 @injectable
 class DrawingDetailBloc extends Bloc<DrawingDetailEvent, DrawingDetailState> {
   final UIImageProvider uiImageProvider;
-  final RecentlyViewedBloc recentlyViewedBloc;
   String? currentDrawingDocumentId;
 
-  DrawingDetailBloc({
-    required this.uiImageProvider,
-    required this.recentlyViewedBloc,
-  }) : super(DrawingDetailState().init()) {
+  DrawingDetailBloc({required this.uiImageProvider})
+      : super(DrawingDetailState().init()) {
     on<LoadSheet>(_loadSheet);
     on<AddAnnotation>(_addAnnotation);
     on<DeleteAnnotation>(_deleteAnnotation);
@@ -47,15 +41,6 @@ class DrawingDetailBloc extends Bloc<DrawingDetailEvent, DrawingDetailState> {
         currentDrawingDocumentId = drawingDetailSnapshot.docs.firstOrNull?.id;
         final image = await uiImageProvider.getImage(
           drawingDetail.versions[event.versionId]!.files["hd_image"]!,
-        );
-
-        // Track drawing view for recently viewed functionality
-        _trackDrawingView(
-          projectId: event.projectId,
-          drawingTitle: event.number,
-          drawingCollection: event.collection,
-          drawingThumbnailUrl:
-              drawingDetail.versions[event.versionId]!.files["hd_image"]!,
         );
 
         if (currentDrawingDocumentId != null) {
@@ -144,21 +129,4 @@ class DrawingDetailBloc extends Bloc<DrawingDetailEvent, DrawingDetailState> {
     }
   }
 
-  void _trackDrawingView({
-    required String projectId,
-    required String drawingTitle,
-    required String drawingCollection,
-    required String drawingThumbnailUrl,
-  }) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      recentlyViewedBloc.add(TrackDrawingViewEvent(
-        userId: user.uid,
-        projectId: projectId,
-        drawingTitle: drawingTitle,
-        drawingCollection: drawingCollection,
-        drawingThumbnailUrl: drawingThumbnailUrl,
-      ));
-    }
-  }
 }

@@ -180,22 +180,16 @@ void populateDrawingsCatalogNoorAcademy(List<dynamic> drawings) {
   final random = Random(getDeterministicRandomSeed(
       "drawings_catalog")); // Seeded random number generator
   var catalogs = [drawingsCatalog1, drawingsCatalog2];
-  print("DEBUG: Populating drawings catalog with ${catalogs.length} catalogs");
   for (var catalog in catalogs) {
     String projectId = catalog['project_id'];
-    print("DEBUG: Processing catalog for project: $projectId");
     List<dynamic> projectDrawings = drawings
         .where((drawing) => drawing['project_id'] == projectId)
         .toList();
-    print(
-        "DEBUG: Found ${projectDrawings.length} drawings for project $projectId");
 
     var catalogDocumentId = generateDocumentId(20, random);
-    print("DEBUG: Creating drawings catalog document: $catalogDocumentId");
     drawingsCatalog.doc(catalogDocumentId).set(catalog);
     populateDrawingCatalogItemsFromDetailsOfNoorAcademy(
         catalogDocumentId, projectDrawings);
     populateDrawingsCatalogActivityLogs(catalogDocumentId);
   }
-  print("DEBUG: Finished populating drawings catalog");
 }

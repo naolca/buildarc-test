@@ -31,12 +31,10 @@ class AccountContextBloc
       InitEvent event, Emitter<AccountContextState> emit) async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
-      debugPrint("DEBUG: No current user found");
       return emit(AccountContextErrorState("No Projects Setup"));
     }
 
     String userId = currentUser.uid;
-    debugPrint("DEBUG: Current user ID: $userId");
     DocumentReference<UserData> userDoc = FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
@@ -50,9 +48,8 @@ class AccountContextBloc
     try {
       DocumentSnapshot<UserData> docSnapshot = await userDoc.get();
       userData = docSnapshot.data();
-      debugPrint("DEBUG: User data found: $userData");
     } catch (e) {
-      debugPrint("DEBUG: Error fetching user data: $e");
+      debugPrint(e.toString());
       emit(AccountContextErrorState("Error fetching user data"));
     }
 
