@@ -115,6 +115,14 @@ class DrawingGrid extends StatelessWidget {
       children: drawingItems.map((drawing) {
         return GestureDetector(
           onTap: () {
+            ///
+            print("DEBUG: Tapping on drawing: ${drawing.title}");
+
+            ///
+            ///
+            ///
+            ///
+            ///
             context.go(
               Uri(
                 path: '/drawings/sheet/',

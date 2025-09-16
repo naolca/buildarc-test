@@ -17,5 +17,7 @@ void populateUsers() {
     },
   ]) {
     users.doc(user["document_id"]).set(user["content"]);
+    print("DEBUG: Populated user data with ID: ${user["document_id"]}");
+    print("DEBUG: User data content: ${user["content"]}");
   }
 }
